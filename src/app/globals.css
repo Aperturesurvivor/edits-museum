@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #000000;
+  --color-panel: #0b0b0c;
+  --color-line: #2f3336;
+  --color-mute: #71767b;
+  --color-bone: #e7e9ea;
+  --color-gold: #c9a961;
+  --color-gold-dim: #8f7a48;
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-cinzel);
+}
+
+html, body { background: #000; color: var(--color-bone); }
+body { font-family: var(--font-inter), system-ui, sans-serif; }
+::selection { background: #c9a96155; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
