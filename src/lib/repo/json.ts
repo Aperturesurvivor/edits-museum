@@ -3,7 +3,7 @@ import { appendFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import raw from "../../../data/edits.json";
 import reviewRaw from "../../../data/review.json";
-import { isLive, type Review } from "../review";
+import { applyReview, isLive, type Review } from "../review";
 import { score } from "../ranking";
 import type { Edit, Submission } from "../types";
 import type { EditRepository, ListQuery, SubmissionRepository } from "./types";
@@ -12,7 +12,7 @@ const REVIEW = reviewRaw as Record<string, Review>;
 // Only edits that passed visual review (or were hand-approved) are visible anywhere.
 const ALL: Edit[] = (raw as Edit[])
   .filter((e) => (e.thumb || e.video) && isLive(e, REVIEW[e.id]))
-  .map((e) => (REVIEW[e.id]?.wing ? { ...e, wing: REVIEW[e.id].wing! } : e))
+  .map((e) => applyReview(e, REVIEW[e.id]))
   .map((e) => ({ e, s: score(e) }))
   .sort((a, b) => b.s - a.s)
   .map((x) => x.e);
@@ -21,8 +21,9 @@ const BY_ID = new Map(ALL.map((e) => [e.id, e]));
 export const jsonEdits: EditRepository = {
   async listRanked({ wings, notWings, offset = 0, limit }: ListQuery) {
     let list = ALL;
-    if (wings?.length) list = list.filter((e) => wings.includes(e.wing));
-    if (notWings?.length) list = list.filter((e) => !notWings.includes(e.wing));
+    const inAny = (e: Edit, ws: string[]) => (e.wings ?? [e.wing]).some((w) => ws.includes(w));
+    if (wings?.length) list = list.filter((e) => inAny(e, wings));
+    if (notWings?.length) list = list.filter((e) => !inAny(e, notWings));
     return list.slice(offset, offset + limit);
   },
   async getEdit(id) {
@@ -30,7 +31,7 @@ export const jsonEdits: EditRepository = {
   },
   async wingCounts() {
     const c: Record<string, number> = {};
-    for (const e of ALL) c[e.wing] = (c[e.wing] ?? 0) + 1;
+    for (const e of ALL) for (const w of e.wings ?? [e.wing]) c[w] = (c[w] ?? 0) + 1;
     return c;
   },
   async hasEdit(id) {

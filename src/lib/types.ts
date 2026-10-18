@@ -22,14 +22,19 @@ export type Edit = {
   height: number | null;
   video: VideoSources | null;
   genre: string | null;
+  /** Primary wing. */
   wing: string;
+  /** Every wing this edit is listed in (primary + weight >= 0.5). Set by visual review. */
+  wings?: string[];
+  /** 0-1 relevance per wing from visual review. */
+  weights?: Record<string, number>;
   subject: string;
   status: EditStatus;
   source: string;
 };
 
 /** Caption-free projection: the only shape that may reach client components. */
-export type PublicEdit = Omit<Edit, "caption" | "subject" | "genre" | "source">;
+export type PublicEdit = Omit<Edit, "caption" | "subject" | "genre" | "source" | "weights">;
 
 export type Submission = {
   id: string;

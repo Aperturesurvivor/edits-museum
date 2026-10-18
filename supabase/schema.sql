@@ -20,7 +20,11 @@ create table if not exists public.edits (
   video_hi     text,
   video_lo     text,
   genre        text,
-  wing         text not null default 'unsorted',
+  wing         text not null default 'unsorted',   -- primary wing (max weight) from visual review
+  wings        text[] not null default '{}',       -- every wing listed in (primary + weight >= 0.5)
+  weights      jsonb not null default '{}'::jsonb, -- 0-1 per wing from visual review
+  review       jsonb,                              -- verdict, confidence, reason, models
+  live         boolean not null default false,     -- passed visual review (or approved by Josiah)
   subject      text not null default '',
   status       text not null default 'unscreened'
                check (status in ('unscreened','flagged_review','flagged_medium','hand_kept','approved_by_josiah','approved')),
@@ -30,9 +34,10 @@ create table if not exists public.edits (
 );
 create index if not exists edits_score_idx on public.edits (score desc);
 create index if not exists edits_wing_score_idx on public.edits (wing, score desc);
+create index if not exists edits_wings_idx on public.edits using gin (wings);
 
 create or replace view public.wing_counts as
-  select wing, count(*)::int as n from public.edits group by wing;
+  select w as wing, count(*)::int as n from public.edits, unnest(wings) as w where live group by w;
 
 create table if not exists public.submissions (
   id           text primary key,          -- X post id
@@ -47,5 +52,5 @@ create table if not exists public.submissions (
 alter table public.edits enable row level security;
 alter table public.submissions enable row level security;
 drop policy if exists "edits are public" on public.edits;
-create policy "edits are public" on public.edits for select using (true);
+create policy "edits are public" on public.edits for select using (live);
 -- No anon policies on submissions: inserts/reads happen server-side with the service role key.
