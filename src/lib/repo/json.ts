@@ -2,12 +2,17 @@ import "server-only";
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import raw from "../../../data/edits.json";
+import reviewRaw from "../../../data/review.json";
+import { isLive, type Review } from "../review";
 import { score } from "../ranking";
 import type { Edit, Submission } from "../types";
 import type { EditRepository, ListQuery, SubmissionRepository } from "./types";
 
+const REVIEW = reviewRaw as Record<string, Review>;
+// Only edits that passed visual review (or were hand-approved) are visible anywhere.
 const ALL: Edit[] = (raw as Edit[])
-  .filter((e) => e.thumb || e.video)
+  .filter((e) => (e.thumb || e.video) && isLive(e, REVIEW[e.id]))
+  .map((e) => (REVIEW[e.id]?.wing ? { ...e, wing: REVIEW[e.id].wing! } : e))
   .map((e) => ({ e, s: score(e) }))
   .sort((a, b) => b.s - a.s)
   .map((x) => x.e);

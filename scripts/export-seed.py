@@ -17,6 +17,7 @@ Usage: python3 scripts/export-seed.py SEED_DIR VARIANTS_JSON [APPROVED_JSON]
 import json, os, sys
 
 EXCLUDE_IDS = {"2077931571911561513", "2111783641357422615"}  # hand-ruled out
+EXCLUDE_AUTHORS = {"AZLEY200", "srgtsoap"}  # Josiah: Love Island clip, suggestive RDR2 scene (Oct 18)
 HAND_KEPT_AUTHORS = {"AcidGamingGizmo", "gamblingatRicks", "HaHomestead1", "TheeDrGroyper", "engineergroypr"}
 
 WING = {
@@ -62,7 +63,7 @@ def status_for(e):
 
 def excluded(e):
     ft = e.get("flag_type") or ""
-    return (e["id"] in EXCLUDE_IDS or e.get("flag_severity") == "high" or "nsfw" in ft
+    return (e["id"] in EXCLUDE_IDS or e["author"] in EXCLUDE_AUTHORS or e.get("flag_severity") == "high" or "nsfw" in ft
             or "non-edit" in ft or e.get("possibly_sensitive"))
 
 approved_path = sys.argv[3] if len(sys.argv) > 3 else "/workspace/em/variants/approved.json"
