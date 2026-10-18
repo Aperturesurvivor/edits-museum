@@ -18,7 +18,7 @@ type Row = {
   likes: number; bookmarks: number; views: number; video_views: number; duration_s: number | null;
   media_type: string | null; thumb: string | null; width: number | null; height: number | null;
   video_hi: string | null; video_lo: string | null; genre: string | null; wing: string; subject: string;
-  status: Edit["status"]; source: string;
+  status: Edit["status"]; source: string; wings: string[] | null; weights: Record<string, number> | null;
 };
 
 const fromRow = (r: Row): Edit => ({
@@ -27,6 +27,7 @@ const fromRow = (r: Row): Edit => ({
   mediaType: r.media_type, thumb: r.thumb, width: r.width, height: r.height,
   video: r.video_hi ? { hi: r.video_hi, lo: r.video_lo } : null,
   genre: r.genre, wing: r.wing, subject: r.subject, status: r.status, source: r.source,
+  wings: r.wings ?? [r.wing], weights: r.weights ?? undefined,
 });
 
 async function rest<T>(pathAndQuery: string, init: RequestInit = {}, write = false): Promise<T> {
@@ -41,17 +42,16 @@ async function rest<T>(pathAndQuery: string, init: RequestInit = {}, write = fal
   return (res.status === 204 ? null : await res.json()) as T;
 }
 
-const inList = (xs: string[]) => `(${xs.map((x) => `"${x.replace(/"/g, "")}"`).join(",")})`;
-
 export const supabaseEdits: EditRepository = {
   async listRanked({ wings, notWings, offset = 0, limit }: ListQuery) {
-    const p = new URLSearchParams({ select: "*", order: "score.desc", offset: String(offset), limit: String(limit) });
-    if (wings?.length) p.append("wing", `in.${inList(wings)}`);
-    if (notWings?.length) p.append("wing", `not.in.${inList(notWings)}`);
+    // Only live edits (passed visual review or Josiah-approved) are ever returned.
+    const p = new URLSearchParams({ select: "*", live: "is.true", order: "score.desc", offset: String(offset), limit: String(limit) });
+    if (wings?.length) p.append("wings", `ov.{${wings.join(",")}}`);
+    if (notWings?.length) p.append("wings", `not.ov.{${notWings.join(",")}}`);
     return (await rest<Row[]>(`edits?${p}`)).map(fromRow);
   },
   async getEdit(id) {
-    const rows = await rest<Row[]>(`edits?select=*&id=eq.${encodeURIComponent(id)}&limit=1`);
+    const rows = await rest<Row[]>(`edits?select=*&live=is.true&id=eq.${encodeURIComponent(id)}&limit=1`);
     return rows[0] ? fromRow(rows[0]) : null;
   },
   async wingCounts() {

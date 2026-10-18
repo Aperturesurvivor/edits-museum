@@ -11,9 +11,17 @@ const STATUS_ADJ: Record<EditStatus, number> = {
 };
 
 /** Freedom of speech, not freedom of reach: engagement + civilization lean + screening state. */
-export function score(e: Pick<Edit, "likes" | "bookmarks" | "views" | "wing" | "status">): number {
+export function score(e: Pick<Edit, "likes" | "bookmarks" | "views" | "wing" | "status" | "weights">): number {
   const engagement = Math.log10(e.likes + 2 * e.bookmarks + 1) + 0.3 * Math.log10(e.views + 1);
-  return engagement + (wingBySlug(e.wing)?.civBoost ?? 0) + STATUS_ADJ[e.status];
+  return engagement + wingBoost(e) + STATUS_ADJ[e.status];
+}
+
+/** Each wing's boost is multiplied by the edit's weight for that wing; the best one counts. */
+export function wingBoost(e: Pick<Edit, "wing" | "weights">): number {
+  if (!e.weights || !Object.keys(e.weights).length) return wingBySlug(e.wing)?.civBoost ?? 0;
+  let best = 0;
+  for (const [k, w] of Object.entries(e.weights)) best = Math.max(best, (wingBySlug(k)?.civBoost ?? 0) * w);
+  return best;
 }
 
 /** Cap how many slots one creator can take in a ranked list. */
@@ -31,7 +39,7 @@ export function capPerAuthor<T extends { author: string }>(items: T[], n: number
 }
 
 export function toPublic(e: Edit): PublicEdit {
-  const { caption, subject, genre, source, ...rest } = e;
-  void caption; void subject; void genre; void source;
+  const { caption, subject, genre, source, weights, ...rest } = e;
+  void caption; void subject; void genre; void source; void weights;
   return rest;
 }
