@@ -24,7 +24,7 @@ export default function Armory() {
                     <span className="block font-bold">{l.name}</span>
                     <span className="block text-sm text-mute">{l.note}</span>
                   </span>
-                  <span className="shrink-0 rounded-full border border-gold-dim px-2.5 py-0.5 text-xs font-semibold text-gold">{l.license}</span>
+                  <span className="shrink-0 rounded-full border border-navy px-2.5 py-0.5 text-xs font-semibold text-link">{l.license}</span>
                 </a>
               </li>
             ))}

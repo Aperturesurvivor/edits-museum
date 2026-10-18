@@ -6,14 +6,22 @@
   --color-line: #2f3336;
   --color-mute: #71767b;
   --color-bone: #e7e9ea;
-  --color-gold: #c9a961;
-  --color-gold-dim: #8f7a48;
+  /* White, black, red, blue. Red = primary accent, blue = secondary/links. */
+  --color-accent: #e0283c;      /* UI red: CTAs, active nav, rank badges, focus */
+  --color-accent-deep: #b22234; /* Old Glory red: pressed/hover, large fills */
+  --color-blue: #2f5bea;        /* royal blue: secondary buttons, chips */
+  --color-navy: #3c3b6e;        /* Old Glory blue: subtle fills, borders */
+  --color-link: #6b8cff;        /* blue tuned for text legibility on black */
   --font-sans: var(--font-inter);
-  --font-display: var(--font-cinzel);
+  --font-display: var(--font-display-face);
 }
 
 html, body { background: #000; color: var(--color-bone); }
 body { font-family: var(--font-inter), system-ui, sans-serif; }
-::selection { background: #c9a96155; }
+::selection { background: #e0283c55; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+/* Sparing American motifs: a thin red-white-blue stripe and a star glyph. */
+.stripe { height: 4px; background: linear-gradient(90deg, #b22234 0 33.3%, #ffffff 33.3% 66.6%, #2f5bea 66.6% 100%); }
+.display { font-family: var(--font-display-face), "Arial Narrow", sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.9; }

@@ -12,7 +12,7 @@ const ITEMS = [
 
 function Icon({ d }: { d: string }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-[26px] w-[26px]" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d={d} />
     </svg>
   );
@@ -23,26 +23,27 @@ export function Nav() {
   const active = (href: string) => (href === "/" ? path === "/" || path.startsWith("/hall") : path.startsWith(href));
   return (
     <>
-      <nav className="sticky top-0 hidden h-dvh w-20 shrink-0 flex-col items-center gap-1 py-4 sm:flex xl:w-64 xl:items-start xl:px-4">
-        <Link href="/" className="mb-4 flex items-center gap-3 px-3 py-2">
-          <span className="font-display text-2xl font-extrabold text-gold">EM</span>
+      <header className="sticky top-0 hidden h-dvh w-[72px] shrink-0 flex-col items-center py-3 sm:flex xl:w-[260px] xl:items-stretch xl:px-3">
+        <Link href="/" className="mb-2 flex h-12 items-center gap-3 rounded-full px-3 hover:bg-white/10">
+          <span className="display text-3xl text-accent">EM</span>
           <span className="hidden text-lg font-extrabold tracking-tight xl:inline">Edits Museum</span>
         </Link>
-        {ITEMS.map((i) => (
-          <Link key={i.href} href={i.href}
-            className={`flex items-center gap-4 rounded-full px-3 py-3 text-xl transition-colors hover:bg-white/10 ${active(i.href) ? "font-extrabold text-bone" : "text-bone/80"}`}>
-            <span className={active(i.href) ? "text-gold" : ""}><Icon d={i.icon} /></span>
-            <span className="hidden xl:inline">{i.label}</span>
-          </Link>
-        ))}
-        <Link href="/submit" className="mt-4 hidden w-full rounded-full bg-gold py-3 text-center font-bold text-black hover:bg-gold/90 xl:block">
+        <nav className="flex flex-col gap-1">
+          {ITEMS.map((i) => (
+            <Link key={i.href} href={i.href} aria-current={active(i.href) ? "page" : undefined}
+              className={`flex h-12 items-center gap-4 rounded-full px-3 text-xl transition-colors hover:bg-white/10 ${active(i.href) ? "font-extrabold" : "text-bone/85"}`}>
+              <span className={active(i.href) ? "text-accent" : ""}><Icon d={i.icon} /></span>
+              <span className="hidden xl:inline">{i.label}</span>
+            </Link>
+          ))}
+        </nav>
+        <Link href="/submit" className="mt-4 hidden h-12 items-center justify-center rounded-full bg-accent text-[17px] font-bold text-black hover:bg-accent-deep xl:flex">
           Submit an edit
         </Link>
-        <Link href="/about" className="mt-auto px-3 text-xs text-mute hover:underline">About & rules</Link>
-      </nav>
-      <nav className="fixed inset-x-0 bottom-0 z-50 flex justify-around border-t border-line bg-black/90 py-2 backdrop-blur sm:hidden">
+      </header>
+      <nav className="fixed inset-x-0 bottom-0 z-50 flex h-14 items-center justify-around border-t border-line bg-black/90 backdrop-blur sm:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
         {ITEMS.map((i) => (
-          <Link key={i.href} href={i.href} aria-label={i.label} className={`p-2 ${active(i.href) ? "text-gold" : "text-bone/80"}`}>
+          <Link key={i.href} href={i.href} aria-label={i.label} className={`p-2 ${active(i.href) ? "text-accent" : "text-bone/80"}`}>
             <Icon d={i.icon} />
           </Link>
         ))}
