@@ -10,4 +10,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Project rules
 
-Read `CODEX_BRIEF.md`. Never render post captions, never embed tweets inline, never re-host video. Never commit secrets, `.env` files, logs or `data/runtime/`. Work on branches and open PRs into `main`.
+Read `CODEX_BRIEF.md`. Never render post captions, never embed tweets inline, never download or re-host video (stream X CDN URLs; keep Referrer-Policy no-referrer). Never commit secrets, `.env` files, logs `data/runtime/` or `data/private/`. Work on branches and open PRs into `main`.

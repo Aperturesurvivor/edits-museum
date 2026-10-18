@@ -1,4 +1,4 @@
-import { WINGS } from "@/lib/data";
+import { WINGS } from "@/lib/wings";
 import { PageHeader } from "@/components/PageHeader";
 import { SubmitForm } from "./SubmitForm";
 

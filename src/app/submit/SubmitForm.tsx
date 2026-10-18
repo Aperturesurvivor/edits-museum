@@ -33,14 +33,14 @@ export function SubmitForm({ wings }: { wings: W[] }) {
   return (
     <form onSubmit={submit} className="space-y-3 p-4">
       <input value={url} onChange={(e) => setUrl(e.target.value)} required inputMode="url" placeholder="https://x.com/creator/status/…"
-        className="w-full rounded-lg border border-line bg-black px-4 py-3 text-base outline-none placeholder:text-mute focus:border-gold" />
-      <select value={wing} onChange={(e) => setWing(e.target.value)} className="w-full rounded-lg border border-line bg-black px-4 py-3 text-base outline-none focus:border-gold">
+        className="w-full rounded-lg border border-line bg-black px-4 py-3 text-base outline-none placeholder:text-mute focus:border-accent" />
+      <select value={wing} onChange={(e) => setWing(e.target.value)} className="w-full rounded-lg border border-line bg-black px-4 py-3 text-base outline-none focus:border-accent">
         <option value="">Genre (optional)</option>
         {wings.map((w) => <option key={w.slug} value={w.slug}>{w.name}</option>)}
       </select>
       <div className="flex items-center justify-between gap-3">
-        <p aria-live="polite" className={`text-sm ${state ? (state.ok ? "text-gold" : "text-red-400") : ""}`}>{state?.text}</p>
-        <button disabled={busy || !url} className="shrink-0 rounded-full bg-gold px-6 py-2.5 font-bold text-black disabled:opacity-40">{busy ? "Sending…" : "Submit"}</button>
+        <p aria-live="polite" className={`text-sm ${state ? (state.ok ? "text-link" : "text-red-400") : ""}`}>{state?.text}</p>
+        <button disabled={busy || !url} className="shrink-0 rounded-full bg-accent px-6 py-2.5 font-bold text-black disabled:opacity-40">{busy ? "Sending…" : "Submit"}</button>
       </div>
     </form>
   );

@@ -5,7 +5,7 @@ export default function About() {
     <div>
       <PageHeader title="About & rules" />
       <div className="max-w-2xl space-y-5 px-4 py-6 text-[15px] leading-relaxed">
-        <p>Edits Museum is a public square for edits. Every piece links back to its creator and plays on the platform where it was posted. We never re-host video.</p>
+        <p>Edits Museum is home to the greatest edits on Earth, with American excellence front and center. It&apos;s a public square for edits. Every piece links back to its creator and plays on the platform where it was posted. We never re-host video.</p>
         <div>
           <h2 className="font-extrabold">What gets removed</h2>
           <ul className="mt-1 list-disc pl-5 text-mute">
