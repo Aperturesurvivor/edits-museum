@@ -23,6 +23,12 @@ export async function getWingPage(wing: string, offset: number, limit: number): 
   return (await edits.listRanked({ wings: [wing], offset, limit })).map(toPublic);
 }
 
+export async function getLiveCount(): Promise<number> {
+  "use cache";
+  cacheLife("minutes");
+  return edits.liveCount();
+}
+
 export async function getWingCounts(): Promise<Record<string, number>> {
   "use cache";
   cacheLife("minutes");

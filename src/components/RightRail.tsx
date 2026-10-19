@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getWingCounts } from "@/lib/data";
+import { getLiveCount, getWingCounts } from "@/lib/data";
 import { WINGS } from "@/lib/wings";
 import { fmtCount } from "@/lib/format";
 
 export async function RightRail() {
   const counts = await getWingCounts();
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const total = await getLiveCount();
   const wings = WINGS.filter((w) => w.slug !== "unsorted" && counts[w.slug]);
   return (
     <aside className="sticky top-0 hidden h-dvh w-[320px] shrink-0 flex-col gap-4 overflow-y-auto px-5 py-4 lg:flex">

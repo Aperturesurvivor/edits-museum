@@ -39,6 +39,9 @@ create index if not exists edits_wings_idx on public.edits using gin (wings);
 create or replace view public.wing_counts as
   select w as wing, count(*)::int as n from public.edits, unnest(wings) as w where live group by w;
 
+create or replace view public.live_count as
+  select count(*)::int as n from public.edits where live;
+
 create table if not exists public.submissions (
   id           text primary key,          -- X post id
   author       text not null,

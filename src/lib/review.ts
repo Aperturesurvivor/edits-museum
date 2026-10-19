@@ -34,7 +34,7 @@ export function isLive(e: Pick<Edit, "status">, r: Review | undefined): boolean 
 
 /** Merge a review into an edit: primary wing, weights and wing memberships. */
 export function applyReview(e: Edit, r: Review | undefined): Edit {
-  if (!r || !r.wing) return { ...e, wings: [e.wing] };
+  if (!r || !r.wing) return { ...e, wings: e.wings?.length ? e.wings : [e.wing] };
   const wings = Array.from(new Set([r.wing, ...Object.entries(r.weights).filter(([, w]) => w >= WING_MEMBER_MIN).map(([k]) => k)]));
   return { ...e, wing: r.wing, weights: r.weights, wings };
 }
