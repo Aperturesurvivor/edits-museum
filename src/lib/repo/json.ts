@@ -34,6 +34,9 @@ export const jsonEdits: EditRepository = {
     for (const e of ALL) for (const w of e.wings ?? [e.wing]) c[w] = (c[w] ?? 0) + 1;
     return c;
   },
+  async liveCount() {
+    return ALL.length;
+  },
   async hasEdit(id) {
     return BY_ID.has(id);
   },

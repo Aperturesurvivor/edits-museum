@@ -18,6 +18,8 @@ export interface EditRepository {
   listRanked(q: ListQuery): Promise<Edit[]>;
   getEdit(id: string): Promise<Edit | null>;
   wingCounts(): Promise<Record<string, number>>;
+  /** Unique live edits (an edit can count in several wings). */
+  liveCount(): Promise<number>;
   hasEdit(id: string): Promise<boolean>;
 }
 

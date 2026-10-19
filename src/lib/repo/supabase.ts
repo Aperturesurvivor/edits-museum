@@ -58,6 +58,10 @@ export const supabaseEdits: EditRepository = {
     const rows = await rest<{ wing: string; n: number }[]>(`wing_counts?select=wing,n`);
     return Object.fromEntries(rows.map((r) => [r.wing, r.n]));
   },
+  async liveCount() {
+    const rows = await rest<{ n: number }[]>(`live_count?select=n`);
+    return rows[0]?.n ?? 0;
+  },
   async hasEdit(id) {
     return (await rest<{ id: string }[]>(`edits?select=id&id=eq.${encodeURIComponent(id)}&limit=1`)).length > 0;
   },
